@@ -1,0 +1,44 @@
+<%- layout('layouts/boilerplate') %>
+<%- include('../partials/navbar') %>
+<%- include('../partials/flash') %>
+
+<div class="row">
+    <% for (let item of products) { %>
+        <div class="col-lg-4 mt-3">
+            <div class="card shadow mx-auto" style="width: 18rem;">
+                <img src="<%=item.img%>" class="card-img-top" alt="...">
+                <span class="badge rounded-pill bg-light text-dark w-25 position-absolute translate-middle-y" style="top:38%;left:5%">
+                    <%=item.avgRating%> &star; | <%=item.reviews.length%>
+                </span>
+                <div class="card-body">
+                    <!-- Flex container for name and heart button -->
+                    <div class="d-flex justify-content-between ">
+                        <h2 class="fs-4 mb-0"><%=item.name%></h2>
+                        <span class="btn like-btn" product-id="<%=item._id%>">
+                            <% if (currentUser && currentUser.wishList && currentUser.wishList.includes(item._id)) { %>
+                                <i class="fas fa-heart "></i>
+                            <% } else { %>
+                                <i class="far fa-heart"></i>
+                            <% } %>
+                        </span>
+                    </div>
+                    <h5 class="fs-5 mt-2"><%=item.price%></h5>
+                    <p class="card-text"><%=item.desc%></p>
+                    <% if (item.reviews.length) { %>
+                        <p class="text-muted"><%=item.reviews.length%> reviews</p>
+                    <% } else { %>
+                        <p class="text-muted">No reviews</p>
+                    <% } %>
+                    <a href="/products/<%=item._id%>" class="btn btn-info">View Product</a>
+                    <% if (currentUser && currentUser.role === 'seller') { %>
+                        <form class="d-inline-block" action="/products/<%=item._id%>?_method=DELETE" method="POST">
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+<script src="/js/common.js"></script>
